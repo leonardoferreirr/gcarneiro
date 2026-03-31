@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabriel Carneiro | Digital Architect</title>
+
+    <!-- Ícones -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- Tailwind CSS Core -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Roboto"', 'sans-serif'],
+                        display: ['"Anton SC"', 'sans-serif'],
+                    },
+                    colors: {
+                        gc: {
+                            primary: '#0ea0e0',
+                            surface: '#000000',
+                            bg: '#111111',
+                            muted: '#dee0e0',
+                            success: '#102045',
+                        }
+                    },
+                    animation: {
+                        'beam-spin': 'beam-spin 3s linear infinite',
+                        'bg-pulse': 'bg-pulse 10s ease-in-out infinite alternate',
+                        'marquee-left': 'marquee-left 40s linear infinite',
+                        'marquee-right': 'marquee-right 40s linear infinite',
+                    },
+                    keyframes: {
+                        'beam-spin': {
+                            from: { transform: 'rotate(0deg)' },
+                            to: { transform: 'rotate(360deg)' },
+                        },
+                        'bg-pulse': {
+                            '0%': { transform: 'scale(1)', opacity: '0.4' },
+                            '100%': { transform: 'scale(1.5)', opacity: '0.8' }
+                        },
+                        'marquee-left': {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' }
+                        },
+                        'marquee-right': {
+                            '0%': { transform: 'translateX(-50%)' },
+                            '100%': { transform: 'translateX(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* =========================================================================
+           FONTES & VARIÁVEIS DO DESIGN SYSTEM (Ref: design_system_gcarneiro.html)
+           ========================================================================= */
+        @font-face {
+            font-family: 'Anton SC';
+            src: url('./assets/fonts/AntonSC-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Roboto';
+            src: url('./assets/fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+        }
+
+        :root {
+            --font-primary: "Anton SC", "Helvetica Neue", "Arial", sans-serif;
+            --font-secondary: "Roboto", "Inter", sans-serif;
+            --ds-text-primary: #0ea0e0;
+            --ds-surface: #000000;
+            --ds-text-secondary: #dee0e0;
+            --ds-bg-color: #111111;
+            --speed-normal: 0.4s;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        html,
+        body {
+            background-color: var(--ds-bg-color);
+            color: var(--ds-text-secondary);
+            font-family: var(--font-secondary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* TEXT STROKE */
+        .ds-text-stroke {
+            color: transparent !important;
+            -webkit-text-stroke: 1.5px var(--ds-text-secondary);
+            transition: all var(--speed-normal) var(--ease-out-expo);
+        }
+
+        .ds-text-stroke.primary-stroke {
+            -webkit-text-stroke: 1.5px var(--ds-text-primary);
+        }
+
+        /* BEAM BUTTON (Do Design System) */
+        .btn-beam-wrapper {
+            position: relative;
+            display: inline-flex;
+            padding: 2px;
+            border-radius: 9999px;
+            overflow: hidden;
+            cursor: pointer;
+            transform: translateZ(0);
+            transition: transform 0.3s;
+        }
+
+        .btn-beam-wrapper:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(14, 160, 224, 0.4);
+        }
+
+        .btn-beam-border {
+            position: absolute;
+            inset: -200%;
+            background: conic-gradient(from 0deg, transparent 0 320deg, var(--ds-text-primary) 360deg);
+            animation: beam-spin 3s linear infinite;
+        }
+
+        @keyframes beam-spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-beam-inner {
+            position: relative;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--ds-text-primary);
+            border-radius: 9999px;
+            padding: 1rem 2.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: var(--font-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-beam-wrapper:hover .btn-beam-inner {
+            background: rgba(14, 160, 224, 0.2);
+            color: #fff;
+        }
+
+        /* FADE IN UP */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo);
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        /* =========================================================================
+           NOVOS UTILITARIOS E COMPONENTES DO DESIGN SYSTEM
+           ========================================================================= */
+        :root {
+            /* Glassmorphism & Transparencies */
+            --ds-glass-bg: rgba(0, 0, 0, 0.4);
+            --ds-glass-border: rgba(14, 160, 224, 0.2);
+            --ds-glass-hover: rgba(14, 160, 224, 0.3);
+
+            /* Shadows & Glows */
+            --ds-shadow-light: 0 4px 24px rgba(0, 0, 0, 0.8);
+            --ds-glow-subtle: 0 0 40px rgba(14, 160, 224, 0.08);
+            --ds-glow-strong: 0 0 20px rgba(14, 160, 224, 0.3);
+            --ds-glass-inner: 0 1px 0 rgba(14, 160, 224, 0.25) inset;
+        }
+
+        .ds-display-1 {
+            font-family: var(--font-primary);
+            font-size: clamp(4rem, 10vw, 8rem);
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
+
+        .ds-h1 {
+            font-family: var(--font-primary);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            letter-spacing: 0.01em;
+            line-height: 1.1;
+        }
+
+        .ds-h2 {
+            font-family: var(--font-primary);
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            letter-spacing: 0.01em;
+            line-height: 1.2;
+        }
+
+        .ds-h3 {
+            font-family: var(--font-primary);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .ds-body-lg {
+            font-size: 1.25rem;
+            font-weight: 300;
+        }
+
+        .ds-body {
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .ds-body-sm {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ds-glass-card {
+            background: var(--ds-glass-bg);
+            border: 1px solid var(--ds-glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: var(--ds-glass-inner), var(--ds-shadow-light);
+            transition: all var(--speed-normal) var(--ease-out-expo);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .ds-glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(14, 160, 224, 0.4);
+            box-shadow: var(--ds-glow-subtle);
+        }
+
+        .flashlight-card {
+            background: var(--ds-surface);
+            border: 1px solid var(--ds-glass-border);
+            border-radius: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+        }
+
+        .flashlight-card::before {
+            content: "";
+            position: absolute;
+            inset: 0px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: screen;
+            background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(14, 160, 224, 0.3), transparent 40%);
+        }
+
+        .flashlight-card:hover::before {
+            opacity: 1;
+        }
+
+        .flashlight-card:hover {
+            border-color: var(--ds-text-primary);
+            transform: translateY(-4px);
+            box-shadow: var(--ds-glow-subtle);
+        }
+
+        /* Accordion (FAQ) */
+        details {
+            transition: background 0.3s ease;
+        }
+
+        details summary {
+            list-style: none;
+            cursor: pointer;
+        }
+
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details[open] .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        /* Netflix Carousel */
+        .ds-carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .ds-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ds-carousel-item {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+        }
+
+        /* MASCARA GRADIENTE PARA O SVG FRONT - Cria um desaparecimento suave nas bordas */
+        .svg-mask-front {
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+    </style>
+</head>
+
+<body class="relative min-h-screen">
+
+    <!-- Navbar Minimalista -->
+    <header
+        class="absolute top-0 left-0 w-full z-50 px-6 py-6 md:px-12 md:py-8 flex justify-center md:justify-start items-center fade-in-up">
+        <img src="./assets/logo.png" alt="Gabriel Carneiro Logo" class="h-8 md:h-12 w-auto select-none" />
+    </header>
+
+    <!-- 1ª DOBRA: HERO SECTION -->
+    <section class="relative w-full h-[100svh] flex flex-col justify-end items-center overflow-hidden bg-gc-bg">
+
+        <!-- Fundo Absoluto com Imagem da Bruma/Brilho -->
+        <div class="absolute inset-0 z-0 h-full w-full">
+            <img src="./assets/fundo-hero.png" alt="Fundo Luminoso"
+                class="w-full h-full object-cover lg:object-[80%_center] opacity-80" />
+        </div>
+
+        <!-- SVG LAYER ATRÁS (Movendo para a esquerda) 100% de fora a fora -->
+        <div
+            class="absolute inset-0 z-[5] flex items-center justify-center overflow-hidden pointer-events-none opacity-20">
+            <div class="flex animate-marquee-left h-full items-center w-max">
+                <!-- Alterado h-full para forçar o svg a ser maior, se necessário pode-se usar h-[120%] e afins -->
+                <img src="./assets/svg-gc.svg" class="h-full lg:h-[120%] w-auto object-cover px-8"
+                    alt="Grafismo SVG GC Fundo" />
+                <img src="./assets/svg-gc.svg" class="h-full lg:h-[120%] w-auto object-cover px-8"
+                    alt="Grafismo SVG GC Fundo" />
+            </div>
+        </div>
+
+        <!-- IMAGEM DO GABRIEL ABSOLUTA (Ancorada e redimensionada) -->
+        <div
+            class="absolute bottom-0 right-0 lg:right-[15%] z-10 w-full lg:w-auto flex justify-center lg:justify-end pointer-events-none">
+            <img src="./assets/img-2-hero.png" alt="Gabriel Carneiro"
+                class="w-[90%] md:w-full max-w-[500px] lg:max-w-[900px] h-auto max-h-[65vh] lg:max-h-[95vh] object-contain object-bottom drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] fade-in-up delay-2" />
+        </div>
+
+        <!-- SVG LAYER FRENTE (Movendo para a direita, 20% opacity, z-index 20 para passar na frente da imagem mas atrás dos textos que é 30) -->
+        <div
+            class="absolute inset-0 z-20 flex items-center justify-center overflow-hidden pointer-events-none svg-mask-front mix-blend-screen opacity-20">
+            <div
+                class="flex animate-marquee-right h-full items-center drop-shadow-[0_0_15px_rgba(14,160,224,0.3)] w-max">
+                <img src="./assets/svg-gc.svg" class="h-full lg:h-[120%] w-auto object-cover px-8 text-gc-primary"
+                    alt="Grafismo SVG GC Frente" />
+                <img src="./assets/svg-gc.svg" class="h-full lg:h-[120%] w-auto object-cover px-8 text-gc-primary"
+                    alt="Grafismo SVG GC Frente" />
+            </div>
+        </div>
+
+        <!-- CONTAINER TEXTOS -->
+        <div
+            class="container mx-auto px-6 relative z-30 w-full h-full flex flex-col lg:flex-row items-end justify-between pointer-events-none">
+
+            <!-- COLUNA ESQUERDA: Textos -->
+            <div
+                class="w-full lg:w-[60%] h-full flex flex-col items-center justify-start lg:justify-center text-center lg:items-start lg:text-left fade-in-up delay-1 pt-32 lg:pt-0 pb-12 lg:pb-0 pointer-events-auto">
+
+                <h1 class="font-display uppercase leading-[0.85] text-gc-muted mb-6 tracking-wide drop-shadow-2xl"
+                    style="font-size: clamp(4.5rem, 10vw, 7.5rem);">
+                    <span class="block text-gc-primary ds-text-stroke primary-stroke">CONSULTORIA</span>
+                    GCARNEIRO
+                </h1>
+
+                <p
+                    class="text-lg md:text-xl text-gc-muted/90 font-light max-w-sm md:max-w-lg leading-relaxed mb-10 drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                    ut labore et dolore magna aliqua.
+                </p>
+
+                <!-- CTA Button -->
+                <div class="btn-beam-wrapper group mt-56 lg:mt-0">
+                    <span class="btn-beam-border"></span>
+                    <a href="#planos" class="btn-beam-inner">
+                        QUERO COMEÇAR AGORA!
+                        <iconify-icon class="group-hover:translate-x-1 group-hover:scale-110 transition-all text-xl"
+                            icon="solar:round-alt-arrow-right-bold-duotone"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Coluna direita fazia apenas espaço -->
+            <div class="hidden lg:block w-full lg:w-[40%]"></div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 2 - CONSULTORIA ONLINE -->
+    <section class="py-24 bg-gc-bg border-t border-gc-surface relative overflow-hidden">
+        <!-- Pattern de Fundo -->
+        <img src="./assets/svg-pattern-01.svg"
+            class="absolute -top-32 -right-32 w-[600px] opacity-20 pointer-events-none rotate-45 z-0" alt="Pattern" />
+        <div class="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
+            <h2 class="ds-h2 text-gc-muted font-display uppercase tracking-widest mb-8 fade-in-up">
+                O seu melhor resultado no <span class="text-gc-primary ds-text-stroke primary-stroke">menor tempo</span>
+                possível
+            </h2>
+            <div class="max-w-3xl ds-body-lg text-gc-muted/90 flex flex-col gap-6 font-light fade-in-up delay-1">
+                <p>A Consultoria GCarneiro é um ecossistema de treinamento desenhado exclusivamente para quem busca
+                    máxima eficiência, treinando onde e quando preferir.</p>
+                <p>Não importa o seu ponto de partida: seu planejamento será construído do zero, respeitando sua rotina,
+                    nível atual e limitações. O foco é um só: otimizar cada minuto do seu esforço para transformar seu
+                    corpo com segurança.</p>
+            </div>
+
+            <div class="mt-12 fade-in-up delay-2">
+                <div class="btn-beam-wrapper group">
+                    <span class="btn-beam-border"></span>
+                    <a href="#planos" class="btn-beam-inner">
+                        QUERO COMEÇAR AGORA
+                        <iconify-icon class="group-hover:translate-x-1 transition-transform"
+                            icon="solar:arrow-right-linear"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 3 - VANTAGENS DO NOSSO TIME -->
+    <section class="py-24 bg-gc-bg relative overflow-hidden">
+        <!-- Pattern de Fundo -->
+        <img src="./assets/svg-pattern-02.svg"
+            class="absolute bottom-0 -left-64 w-[800px] opacity-20 pointer-events-none -scale-y-100 z-0"
+            alt="Pattern" />
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="ds-h2 text-gc-muted font-display uppercase tracking-widest">Vantagens do <span
+                        class="text-gc-primary">Nosso Time</span></h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="ds-glass-card p-8 fade-in-up delay-1 flex flex-col items-center text-center group">
+                    <iconify-icon icon="solar:routing-2-bold-duotone"
+                        class="text-4xl text-gc-muted/40 group-hover:text-gc-primary transition-colors mb-6"></iconify-icon>
+                    <h3 class="ds-body-sm font-bold text-gc-primary mb-4 uppercase">Liberdade Total</h3>
+                    <p class="ds-body text-gc-muted/80">Treine no seu horário e no local de sua escolha.</p>
+                </div>
+
+                <div class="ds-glass-card p-8 fade-in-up delay-2 flex flex-col items-center text-center group">
+                    <iconify-icon icon="solar:stopwatch-play-bold-duotone"
+                        class="text-4xl text-gc-muted/40 group-hover:text-gc-primary transition-colors mb-6"></iconify-icon>
+                    <h3 class="ds-body-sm font-bold text-gc-primary mb-4 uppercase">Eficiência Máxima</h3>
+                    <p class="ds-body text-gc-muted/80">Economize tempo com treinos diretos ao ponto.</p>
+                </div>
+
+                <div class="ds-glass-card p-8 fade-in-up delay-3 flex flex-col items-center text-center group">
+                    <iconify-icon icon="solar:wallet-2-bold-duotone"
+                        class="text-4xl text-gc-muted/40 group-hover:text-gc-primary transition-colors mb-6"></iconify-icon>
+                    <h3 class="ds-body-sm font-bold text-gc-primary mb-4 uppercase">Investimento Inteligente</h3>
+                    <p class="ds-body text-gc-muted/80">O melhor custo-benefício para ter um profissional ao seu lado.
+                    </p>
+                </div>
+
+                <div class="ds-glass-card p-8 fade-in-up delay-1 flex flex-col items-center text-center group">
+                    <iconify-icon icon="solar:dna-bold-duotone"
+                        class="text-4xl text-gc-muted/40 group-hover:text-gc-primary transition-colors mb-6"></iconify-icon>
+                    <h3 class="ds-body-sm font-bold text-gc-primary mb-4 uppercase">DNA Exclusivo</h3>
+                    <p class="ds-body text-gc-muted/80">Um programa 100% personalizado, nunca uma "receita de bolo".</p>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center fade-in-up delay-2">
+                <div class="btn-beam-wrapper group">
+                    <span class="btn-beam-border"></span>
+                    <a href="#planos" class="btn-beam-inner">
+                        QUERO COMEÇAR AGORA
+                        <iconify-icon class="group-hover:translate-x-1 transition-transform"
+                            icon="solar:arrow-right-linear"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 4 - O PROGRAMA GCARNEIRO -->
+    <section class="py-24 bg-gc-bg border-y border-gc-surface/50 relative overflow-hidden">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="ds-h2 text-gc-muted font-display uppercase tracking-widest">O Programa <span
+                        class="text-gc-primary">GCarneiro</span></h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="flashlight-card p-8 flex flex-col h-full fade-in-up delay-1 group"
+                    onmousemove="updateMouse(event, this)">
+                    <div class="mb-8">
+                        <iconify-icon icon="solar:user-speak-bold-duotone"
+                            class="text-5xl text-gc-muted/40 group-hover:text-gc-primary transition-colors"></iconify-icon>
+                    </div>
+                    <h3 class="ds-h3 font-display uppercase text-gc-muted mb-4 tracking-wider">Consultoria Online</h3>
+                    <p class="ds-body text-gc-muted/90 flex-grow">Um plano de treinamento INDIVIDUALIZADO, elaborado com
+                        base no seu perfil genético e objetivos. É o seu mapa pessoal para facilitar sua evolução e
+                        garantir que cada repetição conte.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flashlight-card p-8 flex flex-col h-full fade-in-up delay-2 group"
+                    onmousemove="updateMouse(event, this)">
+                    <div class="mb-8">
+                        <iconify-icon icon="solar:dumbbell-large-minimalistic-bold-duotone"
+                            class="text-5xl text-gc-muted/40 group-hover:text-gc-primary transition-colors"></iconify-icon>
+                    </div>
+                    <h3 class="ds-h3 font-display uppercase text-gc-muted mb-4 tracking-wider">Prescrição de Treino</h3>
+                    <p class="ds-body text-gc-muted/90 flex-grow">Treinar com inteligência é o segredo da longevidade.
+                        Prescrevo exercícios que não apenas transformam seu físico, mas protegem sua saúde, ensinando a
+                        forma correta e segura de extrair o máximo de cada movimento.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flashlight-card p-8 flex flex-col h-full fade-in-up delay-3 group"
+                    onmousemove="updateMouse(event, this)">
+                    <div class="mb-8">
+                        <iconify-icon icon="solar:graph-up-bold-duotone"
+                            class="text-5xl text-gc-muted/40 group-hover:text-gc-primary transition-colors"></iconify-icon>
+                    </div>
+                    <h3 class="ds-h3 font-display uppercase text-gc-muted mb-4 tracking-wider">Avaliação Física Digital
+                    </h3>
+                    <p class="ds-body text-gc-muted/90 flex-grow">O que não é medido, não é gerenciado. Através da nossa
+                        avaliação, quantificamos seu estado atual para que possamos celebrar cada evolução real ao longo
+                        do processo.</p>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center fade-in-up delay-1">
+                <div class="btn-beam-wrapper group">
+                    <span class="btn-beam-border"></span>
+                    <a href="#planos" class="btn-beam-inner">
+                        QUERO COMEÇAR AGORA
+                        <iconify-icon class="group-hover:translate-x-1 transition-transform"
+                            icon="solar:arrow-right-linear"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 5 - PLANOS -->
+    <section id="planos" class="py-24 bg-gc-bg relative overflow-hidden">
+        <!-- Pattern de Fundo -->
+        <img src="./assets/svg-pattern-02.svg"
+            class="absolute -bottom-64 -right-48 w-[800px] opacity-20 pointer-events-none rotate-180 z-0"
+            alt="Pattern" />
+        <!-- Fundo limpo sem glow -->
+        <div class="container mx-auto px-6 relative z-10 mt-12">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="ds-h2 text-gc-muted font-display uppercase tracking-widest">Escolha o plano que <span class="text-gc-primary">mais combina com você!</span></h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Mensal -->
+                <div class="ds-glass-card p-10 flex flex-col h-full text-center fade-in-up delay-1 border-gc-muted/10">
+                    <span class="ds-body-sm text-gc-primary mb-4 block tracking-widest uppercase">Foco Imediato</span>
+                    <h3 class="font-display text-4xl text-gc-muted mb-4 uppercase">Mensal</h3>
+                    <p
+                        class="text-3xl text-gc-primary font-light mb-10 border-b border-gc-primary/20 pb-8 hover:scale-110 transition-transform cursor-default">
+                        R$ 199,90<br><span class="text-sm opacity-50 text-gc-muted">/ mensal</span></p>
+                    <div class="mt-auto pt-4">
+                        <div class="btn-beam-wrapper group w-full">
+                            <span class="btn-beam-border"></span>
+                            <a href="#"
+                                class="btn-beam-inner w-full justify-center text-sm font-bold bg-transparent">QUERO
+                                COMEÇAR AGORA</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trimestral (Destaque Removido) -->
+                <div class="ds-glass-card p-10 flex flex-col h-full text-center fade-in-up delay-2 border-gc-muted/10">
+                    <span class="ds-body-sm text-gc-primary mb-4 block tracking-widest uppercase">Construção de
+                        base</span>
+                    <h3 class="font-display text-4xl text-gc-muted mb-4 uppercase">Trimestral</h3>
+                    <p
+                        class="text-3xl text-gc-primary font-light mb-10 border-b border-gc-primary/20 pb-8 hover:scale-110 transition-transform cursor-default">
+                        R$ 449,90<br><span class="text-sm opacity-50 text-gc-muted">/ trimestre</span></p>
+                    <div class="mt-auto pt-4">
+                        <div class="btn-beam-wrapper group w-full">
+                            <span class="btn-beam-border"></span>
+                            <a href="#"
+                                class="btn-beam-inner w-full justify-center text-sm font-bold bg-transparent">QUERO
+                                COMEÇAR AGORA</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semestral -->
+                <div class="ds-glass-card p-10 flex flex-col h-full text-center fade-in-up delay-3 border-gc-muted/10">
+                    <span class="ds-body-sm text-gc-primary mb-4 block tracking-widest uppercase">Transformação
+                        completa</span>
+                    <h3 class="font-display text-4xl text-gc-muted mb-4 uppercase">Semestral</h3>
+                    <p
+                        class="text-3xl text-gc-muted font-light mb-10 border-b border-gc-primary/20 pb-8 hover:scale-110 transition-transform cursor-default">
+                        R$ 599,90<br><span class="text-sm opacity-50">/ semestre</span></p>
+                    <div class="mt-auto pt-4">
+                        <div class="btn-beam-wrapper group w-full">
+                            <span class="btn-beam-border"></span>
+                            <a href="#"
+                                class="btn-beam-inner w-full justify-center text-sm font-bold bg-transparent">QUERO
+                                COMEÇAR AGORA</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 6 - DEPOIMENTOS (CARROSSEL) -->
+    <section class="py-24 bg-gc-bg border-y border-gc-surface/50 relative overflow-hidden">
+        <!-- Pattern de Fundo Topo -->
+        <img src="./assets/svg-pattern-01.svg"
+            class="absolute -top-48 -left-32 w-[700px] opacity-20 pointer-events-none -scale-y-100 rotate-[-15deg] z-0"
+            alt="Pattern" />
+        <div class="container mx-auto px-6 mb-12 fade-in-up text-center">
+            <h2 class="ds-h2 text-gc-muted font-display uppercase tracking-widest">O resultado de <span
+                    class="text-gc-primary">quem confia</span></h2>
+        </div>
+
+        <div class="pl-6 md:pl-16 relative w-full mb-16 fade-in-up delay-1 cursor-grab active:cursor-grabbing">
+            <div class="ds-carousel gap-6 pr-6 pb-6 items-center">
+                <img src="./assets/depoiments/01.png" alt="Depoimento 1"
+                    class="ds-carousel-item h-[450px] w-auto object-contain rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-gc-primary/20 hover:scale-[1.02] transition-transform" />
+                <img src="./assets/depoiments/02.png" alt="Depoimento 2"
+                    class="ds-carousel-item h-[450px] w-auto object-contain rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-gc-primary/20 hover:scale-[1.02] transition-transform" />
+                <img src="./assets/depoiments/03.png" alt="Depoimento 3"
+                    class="ds-carousel-item h-[450px] w-auto object-contain rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-gc-primary/20 hover:scale-[1.02] transition-transform" />
+                <img src="./assets/depoiments/04.png" alt="Depoimento 4"
+                    class="ds-carousel-item h-[450px] w-auto object-contain rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-gc-primary/20 hover:scale-[1.02] transition-transform" />
+                <img src="./assets/depoiments/05.png" alt="Depoimento 5"
+                    class="ds-carousel-item h-[450px] w-auto object-contain rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-gc-primary/20 hover:scale-[1.02] transition-transform" />
+                <img src="./assets/depoiments/06.png" alt="Depoimento 6"
+                    class="ds-carousel-item h-[450px] w-auto object-contain rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-gc-primary/20 hover:scale-[1.02] transition-transform" />
+            </div>
+            <!-- Gradient de fim do scroll mobile -->
+            <div
+                class="absolute top-0 right-0 w-24 h-[450px] bg-gradient-to-l from-gc-bg to-transparent pointer-events-none">
+            </div>
+        </div>
+
+        <div class="text-center fade-in-up delay-2">
+            <div class="btn-beam-wrapper group">
+                <span class="btn-beam-border"></span>
+                <a href="#planos" class="btn-beam-inner">
+                    QUERO COMEÇAR AGORA
+                    <iconify-icon class="group-hover:translate-x-1 transition-transform"
+                        icon="solar:arrow-right-linear"></iconify-icon>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 7 - SOBRE O PROFISSIONAL -->
+    <section class="py-24 bg-gc-bg relative overflow-hidden">
+        <!-- Pattern de Fundo Direita -->
+        <img src="./assets/svg-pattern-02.svg"
+            class="absolute top-16 -right-56 w-[600px] opacity-20 pointer-events-none rotate-[105deg] z-0"
+            alt="Pattern" />
+        <div
+            class="container mx-auto px-6 max-w-6xl relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
+            <div class="w-full lg:w-1/2 flex justify-center fade-in-up">
+                <div
+                    class="relative w-full max-w-[450px] aspect-[3/4] ds-glass-card overflow-hidden rounded-2xl border-gc-primary/30">
+                    <div class="absolute inset-0 bg-gc-primary/10 mix-blend-screen z-10"></div>
+                    <!-- Imagem do Profissional -->
+                    <img src="./assets/img-gc.png"
+                        alt="Gabriel Carneiro - Coach"
+                        class="absolute w-full h-full object-cover object-center" />
+                </div>
+            </div>
+
+            <div class="w-full lg:w-1/2 fade-in-up delay-1">
+                <span class="ds-body-sm text-gc-primary mb-4 block tracking-widest">SOBRE O</span>
+                <h2 class="ds-h2 text-gc-muted font-display uppercase tracking-widest mb-6">Gabriel <span
+                        class="text-gc-primary">Carneiro</span></h2>
+                <div class="ds-body text-gc-muted/90 max-w-lg mb-10 flex flex-col gap-4">
+                    <p>Minha relação com a atividade física começou aos 12 anos, quando comecei a jogar basquete. Joguei
+                        durante toda a adolescência e cheguei a atuar profissionalmente fora da minha cidade. Embora a
+                        carreira tenha sido curta, o amor pelo esporte e pela atividade física sempre esteve presente na
+                        minha vida.</p>
+                    <p>Há mais de 7 anos atuo na área de Educação Física, e tive a oportunidade de ajudar muitas pessoas
+                        a conquistarem seus objetivos. Agora, quero ir ainda mais longe trazendo minha consultoria
+                        online, com foco em atendimento humanizado, personalizado e eficiente.</p>
+                    <p>Na minha metodologia, cada aluno é único: do iniciante que quer fugir do sedentarismo até o
+                        atleta que busca alto rendimento. Meu objetivo é oferecer suporte completo, guiando você da
+                        melhor forma para alcançar seus resultados e conectar sua rotina com qualidade de vida.</p>
+                    <p>Conte comigo para transformar seus objetivos em realidade!</p>
+                </div>
+
+                <div class="btn-beam-wrapper group">
+                    <span class="btn-beam-border"></span>
+                    <a href="#planos" class="btn-beam-inner">
+                        QUERO COMEÇAR AGORA
+                        <iconify-icon class="group-hover:translate-x-1 transition-transform"
+                            icon="solar:arrow-right-linear"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 8 - FAQ -->
+    <section class="py-24 bg-gc-bg relative overflow-hidden">
+        <!-- Pattern de Fundo -->
+        <img src="./assets/svg-pattern-01.svg"
+            class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1200px] opacity-20 pointer-events-none z-0"
+            alt="Pattern" />
+        <div class="container mx-auto px-6 md:px-32 max-w-5xl relative z-10">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="ds-h2 text-gc-muted font-display uppercase tracking-widest">Dúvidas <span
+                        class="text-gc-primary">Frequentes</span> (FAQ)</h2>
+            </div>
+
+            <div class="flex flex-col gap-4 fade-in-up delay-1">
+                <details class="ds-glass-card border-gc-primary/10 rounded-xl overflow-hidden group">
+                    <summary
+                        class="w-full flex justify-between items-center p-6 text-gc-muted font-secondary outline-none hover:text-gc-primary transition-colors text-lg"
+                        style="font-weight: 500;">
+                        O que a consultoria entrega na prática?
+                        <iconify-icon icon="solar:add-circle-line-duotone"
+                            class="faq-icon text-2xl text-gc-primary transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div
+                        class="px-6 pb-6 text-gc-muted/70 font-light border-t border-gc-surface/50 pt-4 mt-2 leading-relaxed">
+                        Você recebe um planejamento de treino feito exclusivamente para você. Nada de treinos prontos ou
+                        protocolos de IA. Sou eu, Gabriel Carneiro, analisando sua rotina para entregar o que há de mais
+                        eficiente para o seu objetivo.
+                    </div>
+                </details>
+
+                <details class="ds-glass-card border-gc-primary/10 rounded-xl overflow-hidden group">
+                    <summary
+                        class="w-full flex justify-between items-center p-6 text-gc-muted font-secondary outline-none hover:text-gc-primary transition-colors text-lg"
+                        style="font-weight: 500;">
+                        Como tenho certeza que terei resultados?
+                        <iconify-icon icon="solar:add-circle-line-duotone"
+                            class="faq-icon text-2xl text-gc-primary transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div
+                        class="px-6 pb-6 text-gc-muted/70 font-light border-t border-gc-surface/50 pt-4 mt-2 leading-relaxed">
+                        O plano é moldado para o seu corpo e conta com acompanhamento mensal. Se algo não evoluir como
+                        planejado, eu mesmo faço os ajustes necessários. O sucesso aqui é matemático: esforço certo +
+                        plano certo = resultado.
+                    </div>
+                </details>
+
+                <details class="ds-glass-card border-gc-primary/10 rounded-xl overflow-hidden group">
+                    <summary
+                        class="w-full flex justify-between items-center p-6 text-gc-muted font-secondary outline-none hover:text-gc-primary transition-colors text-lg"
+                        style="font-weight: 500;">
+                        E se eu não me adaptar ao método?
+                        <iconify-icon icon="solar:add-circle-line-duotone"
+                            class="faq-icon text-2xl text-gc-primary transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div
+                        class="px-6 pb-6 text-gc-muted/70 font-light border-t border-gc-surface/50 pt-4 mt-2 leading-relaxed">
+                        Sua satisfação é minha prioridade. Conforme contrato, você tem até 30 dias para testar e, se não
+                        estiver satisfeito, pode pedir o reembolso sem burocracia. Meu foco é o seu resultado, não
+                        apenas a venda.
+                    </div>
+                </details>
+
+                <details class="ds-glass-card border-gc-primary/10 rounded-xl overflow-hidden group">
+                    <summary
+                        class="w-full flex justify-between items-center p-6 text-gc-muted font-secondary outline-none hover:text-gc-primary transition-colors text-lg"
+                        style="font-weight: 500;">
+                        Terei auxílio para executar os exercícios?
+                        <iconify-icon icon="solar:add-circle-line-duotone"
+                            class="faq-icon text-2xl text-gc-primary transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div
+                        class="px-6 pb-6 text-gc-muted/70 font-light border-t border-gc-surface/50 pt-4 mt-2 leading-relaxed">
+                        Com certeza! Além da planilha, entrego materiais de apoio e vídeos demonstrativos de cada
+                        exercício. Você saberá exatamente o que fazer e como fazer para evitar lesões e maximizar
+                        ganhos.
+                    </div>
+                </details>
+
+                <details class="ds-glass-card border-gc-primary/10 rounded-xl overflow-hidden group">
+                    <summary
+                        class="w-full flex justify-between items-center p-6 text-gc-muted font-secondary outline-none hover:text-gc-primary transition-colors text-lg"
+                        style="font-weight: 500;">
+                        Posso tirar dúvidas diretamente com você?
+                        <iconify-icon icon="solar:add-circle-line-duotone"
+                            class="faq-icon text-2xl text-gc-primary transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div
+                        class="px-6 pb-6 text-gc-muted/70 font-light border-t border-gc-surface/50 pt-4 mt-2 leading-relaxed">
+                        Sim. Quero que você entenda o "porquê" de cada coisa. Estarei à disposição para te ajudar a
+                        evoluir com consciência, aprendendo a treinar de verdade.
+                    </div>
+                </details>
+
+                <details class="ds-glass-card border-gc-primary/10 rounded-xl overflow-hidden group">
+                    <summary
+                        class="w-full flex justify-between items-center p-6 text-gc-muted font-secondary outline-none hover:text-gc-primary transition-colors text-lg"
+                        style="font-weight: 500;">
+                        A consultoria online perde em qualidade para a presencial?
+                        <iconify-icon icon="solar:add-circle-line-duotone"
+                            class="faq-icon text-2xl text-gc-primary transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div
+                        class="px-6 pb-6 text-gc-muted/70 font-light border-t border-gc-surface/50 pt-4 mt-2 leading-relaxed">
+                        De forma alguma. A única diferença é o contato físico. A metodologia, o rigor técnico e as
+                        análises são idênticas. O questionário que você responde online é o mesmo que eu utilizo na
+                        minha avaliação presencial.
+                    </div>
+                </details>
+
+                <!-- Box de Acionamento -->
+                <div
+                    class="p-8 bg-gc-primary/10 border border-gc-primary/30 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 mt-8 fade-in-up delay-2 shadow-[0_0_30px_rgba(14,160,224,0.1)]">
+                    <div class="text-center md:text-left">
+                        <h4 class="font-bold text-gc-primary mb-2 text-xl">Ainda tem dúvidas? Vamos conversar.</h4>
+                        <p class="text-sm text-gc-muted/90">Se precisar de um suporte antes de fechar, fale direto
+                            comigo ou com minha equipe.</p>
+                    </div>
+                    <a href="https://wa.me/numerodeseuwhatsapp" target="_blank"
+                        class="px-6 py-4 bg-gc-primary text-white font-bold rounded-xl whitespace-nowrap hover:scale-105 transition-transform shadow-[0_4px_20px_rgba(14,160,224,0.4)] flex items-center gap-2">
+                        <iconify-icon icon="solar:phone-calling-bold-duotone" class="text-xl"></iconify-icon> Chamar no
+                        WhatsApp
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER BÁSICO DE ENCERRAMENTO -->
+    <footer class="py-12 border-t border-gc-surface bg-gc-bg text-center flex flex-col items-center">
+        <img src="./assets/logo.png" alt="Gabriel Carneiro Logo"
+            class="h-10 w-auto mb-6 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" />
+        <p class="text-xs font-light text-gc-muted/40">© 2026 Gabriel Carneiro. Todos os direitos reservados.</p>
+    </footer>
+
+
+    <!-- Scripts de Interação Básica -->
+    <script>
+        // Flashlight logic para os cards reativos
+        function updateMouse(e, element) {
+            const rect = element.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            element.style.setProperty('--mouse-x', `${x}px`);
+            element.style.setProperty('--mouse-y', `${y}px`);
+        }
+
+        feather.replace();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-up').forEach((el) => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+
+</html>
