@@ -288,8 +288,8 @@
                             </div>
                         </div>
                         <div>
-                            <label class="ds-label">Contato (WhatsApp/Email)</label>
-                            <input type="text" name="contato" class="ds-input" placeholder="(00) 00000-0000 ou email@exemplo.com" required>
+                            <label class="ds-label">CONTATO (WHATSAPP)</label>
+                            <input type="text" name="contato" id="phone-input" class="ds-input" placeholder="(00) 00000-0000" required>
                         </div>
                     </div>
                 </div>
@@ -564,6 +564,24 @@
         const submitBtnWrapper = document.getElementById('submit-btn-wrapper');
         const navButtons = document.getElementById('nav-buttons');
         const successScreen = document.getElementById('success-screen');
+        const phoneInput = document.getElementById('phone-input');
+
+        // Phone Mask Logic
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            
+            if (value.length > 10) {
+                value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+            } else if (value.length > 5) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,5}).*/, "($1) $2");
+            } else if (value.length > 0) {
+                value = value.replace(/^(\d{0,2})/, "($1");
+            }
+            e.target.value = value;
+        });
 
         let currentStep = 1;
         const totalSteps = 7;
@@ -616,7 +634,17 @@
             let valid = true;
 
             inputs.forEach(input => {
-                if (!input.value) {
+                let isInvalid = !input.value;
+                
+                // Specific validation for phone
+                if (input.id === 'phone-input') {
+                    const digits = input.value.replace(/\D/g, '');
+                    if (digits.length !== 11) {
+                        isInvalid = true;
+                    }
+                }
+
+                if (isInvalid) {
                     input.classList.add('border-red-500');
                     valid = false;
                 } else {
