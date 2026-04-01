@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCarneiro | Formulário de Pré-Anamnese</title>
+    <link rel="icon" type="image/png" href="./assets/Logo%20Gabriel%20Carneiro-21.png">
+
+    <!-- Ícones -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- Tailwind CSS Core -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Roboto"', 'sans-serif'],
+                        display: ['"Anton SC"', 'sans-serif'],
+                    },
+                    colors: {
+                        gc: {
+                            primary: '#0ea0e0',
+                            surface: '#000000',
+                            bg: '#111111',
+                            muted: '#dee0e0',
+                            success: '#102045',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @font-face {
+            font-family: 'Anton SC';
+            src: url('./assets/fonts/AntonSC-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Roboto';
+            src: url('./assets/fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+        }
+
+        :root {
+            --font-primary: "Anton SC", sans-serif;
+            --font-secondary: "Roboto", sans-serif;
+            --ds-text-primary: #0ea0e0;
+            --ds-surface: #000000;
+            --ds-text-secondary: #dee0e0;
+            --ds-bg-color: #111111;
+            --speed-normal: 0.4s;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            background-color: var(--ds-bg-color);
+            color: var(--ds-text-secondary);
+            font-family: var(--font-secondary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .ds-glass-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(14, 160, 224, 0.2);
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
+        }
+
+        .ds-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(14, 160, 224, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .ds-input:focus {
+            border-color: var(--ds-text-primary);
+            box-shadow: 0 0 15px rgba(14, 160, 224, 0.3);
+            background: rgba(14, 160, 224, 0.05);
+        }
+
+        .ds-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--ds-text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(14, 160, 224, 0.1);
+            border-radius: 9999px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--ds-text-primary);
+            width: 0%;
+            transition: width 0.5s var(--ease-out-expo);
+            box-shadow: 0 0 10px rgba(14, 160, 224, 0.8);
+        }
+
+        /* Botão Beam do Design System */
+        .btn-beam-wrapper {
+            position: relative;
+            display: inline-flex;
+            padding: 2px;
+            border-radius: 9999px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn-beam-wrapper:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-beam-border {
+            position: absolute;
+            inset: -200%;
+            background: conic-gradient(from 0deg, transparent 0 320deg, var(--ds-text-primary) 360deg);
+            animation: beam-spin 3s linear infinite;
+        }
+
+        @keyframes beam-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-beam-inner {
+            position: relative;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            color: var(--ds-text-primary);
+            border-radius: 9999px;
+            padding: 0.75rem 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-beam-wrapper:hover .btn-beam-inner {
+            background: var(--ds-text-primary);
+            color: #000;
+        }
+
+        .btn-secondary {
+            color: var(--ds-text-secondary);
+            opacity: 0.6;
+            transition: opacity 0.3s;
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+
+        .btn-secondary:hover {
+            opacity: 1;
+        }
+
+        input[type="radio"] {
+            accent-color: var(--ds-text-primary);
+        }
+
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(14, 160, 224, 0.1);
+            color: var(--ds-text-primary);
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--ds-text-primary);
+            animation: scaleIn 0.5s var(--ease-out-expo);
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center py-12 px-6">
+
+    <!-- Header / Logo -->
+    <header class="mb-12">
+        <a href="index.html">
+            <img src="./assets/logo.png" alt="G. Carneiro Logo" class="h-10 w-auto opacity-80 hover:opacity-100 transition-opacity" />
+        </a>
+    </header>
+
+    <main class="w-full max-w-2xl">
+        <div class="ds-glass-card p-8 md:p-12 relative overflow-hidden">
+            
+            <!-- Progress Bar -->
+            <div class="mb-10">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="step-indicator" class="text-xs font-bold text-gc-primary uppercase tracking-widest">Passo 1 de 7</span>
+                    <span id="step-title" class="text-xs font-bold text-gc-muted/60 uppercase tracking-widest">Dados Pessoais</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill" style="width: 14.28%;"></div>
+                </div>
+            </div>
+
+            <form id="anamnese-form">
+                
+                <!-- Passo 1: Dados Pessoais -->
+                <div class="step-content active" data-step="1">
+                    <h2 class="font-display text-4xl text-gc-muted mb-8 uppercase tracking-wider">Dados Pessoais</h2>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label class="ds-label">Nome Completo</label>
+                            <input type="text" name="nome" class="ds-input" placeholder="Seu nome completo" required>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="ds-label">Data de Nascimento</label>
+                                <input type="date" name="nascimento" class="ds-input" required>
+                            </div>
+                            <div>
+                                <label class="ds-label">Idade</label>
+                                <input type="number" name="idade" class="ds-input" placeholder="Sua idade" required>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="ds-label">Sexo</label>
+                                <select name="sexo" class="ds-input" required>
+                                    <option value="" disabled selected>Selecione</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="ds-label">Peso Atual (kg)</label>
+                                <input type="number" step="0.1" name="peso" class="ds-input" placeholder="Ex: 75.5" required>
+                            </div>
+                            <div>
+                                <label class="ds-label">Altura (cm)</label>
+                                <input type="number" name="altura" class="ds-input" placeholder="Ex: 175" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="ds-label">Contato (WhatsApp/Email)</label>
+                            <input type="text" name="contato" class="ds-input" placeholder="(00) 00000-0000 ou email@exemplo.com" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 2: Histórico de Saúde -->
+                <div class="step-content" data-step="2">
+                    <h2 class="font-display text-4xl text-gc-muted mb-8 uppercase tracking-wider">Histórico de Saúde</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="ds-label">1. Possui alguma condição de saúde diagnosticada?</label>
+                            <textarea name="saude_condicao" class="ds-input h-24" placeholder="Hipertensão, diabetes, problemas cardíacos, respiratórios, ortopédicos..."></textarea>
+                        </div>
+                        <div>
+                            <label class="ds-label">2. Faz uso de algum medicamento regularmente? Quais?</label>
+                            <textarea name="medicamentos" class="ds-input h-24" placeholder="Descreva os medicamentos e frequência"></textarea>
+                        </div>
+                        <div>
+                            <label class="ds-label">3. Já passou por cirurgias? Quais e quando?</label>
+                            <textarea name="cirurgias" class="ds-input h-24" placeholder="Descreva cirurgias relevantes"></textarea>
+                        </div>
+                        <div>
+                            <label class="ds-label">4. Possui alguma alergia ou restrição alimentar?</label>
+                            <input type="text" name="alergias" class="ds-input" placeholder="Ex: Glúten, Lactose, etc.">
+                        </div>
+                        <div>
+                            <label class="ds-label">5. Já sofreu algum tipo de lesão impactante?</label>
+                            <textarea name="lesoes" class="ds-input h-24" placeholder="Muscular, articular, óssea que possa impactar treinos"></textarea>
+                        </div>
+                        <div>
+                            <label class="ds-label">6. Faz acompanhamento médico regularmente?</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="checkup_regular" value="Sim"> Sim
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="checkup_regular" value="Não"> Não
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 3: Hábitos de Vida -->
+                <div class="step-content" data-step="3">
+                    <h2 class="font-display text-4xl text-gc-muted mb-8 uppercase tracking-wider">Hábitos de Vida</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="ds-label">1. Você fuma ou já fumou?</label>
+                            <select name="fuma" class="ds-input">
+                                <option value="Não">Não</option>
+                                <option value="Fumante">Sim, sou fumante</option>
+                                <option value="Ex-fumante">Já fumei no passado</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="ds-label">2. Consome bebidas alcoólicas? Frequência?</label>
+                            <input type="text" name="alcool" class="ds-input" placeholder="Ex: Socialmente, fins de semana, etc.">
+                        </div>
+                        <div>
+                            <label class="ds-label">3. Como avalia sua qualidade de sono?</label>
+                            <div class="flex flex-wrap gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="sono" value="Ruim"> Ruim
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="sono" value="Regular"> Regular
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="sono" value="Boa"> Boa
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="ds-label">4. Possui uma alimentação equilibrada?</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="alimentacao_equilibrada" value="Sim"> Sim
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="alimentacao_equilibrada" value="Não"> Não
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="ds-label">5. Já realizou atividades físicas antes? Quais?</label>
+                            <textarea name="atividades_anteriores" class="ds-input h-24" placeholder="Quais e por quanto tempo?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 4: Avaliação Física -->
+                <div class="step-content" data-step="4">
+                    <h2 class="font-display text-4xl text-gc-muted mb-8 uppercase tracking-wider">Avaliação Física</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="ds-label">1. Objetivo Principal</label>
+                            <select name="objetivo_fisico" class="ds-input">
+                                <option value="Ganho de Massa">Ganho de Massa</option>
+                                <option value="Perda de Gordura">Perda de Gordura</option>
+                                <option value="Manutenção">Manutenção</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="ds-label">2. Circunferência abdominal / cintura (cm)</label>
+                            <input type="number" name="circunferencia" class="ds-input" placeholder="Se possível medir">
+                        </div>
+                        <div>
+                            <label class="ds-label">3. Dificuldades ou limitações em exercícios?</label>
+                            <textarea name="limitacoes_exercicio" class="ds-input h-24" placeholder="Ex: agachar, correr, levantar pesos..."></textarea>
+                        </div>
+                        <div>
+                            <label class="ds-label">4. Nível de condicionamento atual</label>
+                            <select name="nivel_condicionamento" class="ds-input">
+                                <option value="Iniciante">Iniciante</option>
+                                <option value="Intermediário">Intermediário</option>
+                                <option value="Avançado">Avançado</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="ds-label">5. Frequência de treinos por semana</label>
+                            <input type="number" name="frequencia_treino" class="ds-input" placeholder="Ex: 3, 4, 5 vezes">
+                        </div>
+                        <div>
+                            <label class="ds-label">6. Tempo disponível por treino (minutos)</label>
+                            <input type="number" name="tempo_treino" class="ds-input" placeholder="Ex: 45, 60...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 5: Objetivos do Treino -->
+                <div class="step-content" data-step="5">
+                    <h2 class="font-display text-4xl text-gc-muted mb-8 uppercase tracking-wider">Objetivos do Treino</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="ds-label">1. Principal objetivo com a consultoria?</label>
+                            <input type="text" name="objetivo_principal" class="ds-input" placeholder="Emagrecimento, hipertrofia, performance...">
+                        </div>
+                        <div>
+                            <label class="ds-label">2. Há algum objetivo secundário?</label>
+                            <input type="text" name="objetivo_secundario" class="ds-input" placeholder="Melhora do sono, disposição, etc.">
+                        </div>
+                        <div>
+                            <label class="ds-label">3. Existe uma data específica para resultados?</label>
+                            <input type="text" name="data_objetivo" class="ds-input" placeholder="Ex: Casamento, Viagem, Competição...">
+                        </div>
+                        <div>
+                            <label class="ds-label">4. Motivação principal</label>
+                            <textarea name="motivacao" class="ds-input h-32" placeholder="Por que deseja iniciar a consultoria e treinar agora?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 6: Preferências e Estilo -->
+                <div class="step-content" data-step="6">
+                    <h2 class="font-display text-4xl text-gc-muted mb-8 uppercase tracking-wider">Estilo de Treino</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="ds-label">1. Tipo de treino preferido</label>
+                            <textarea name="tipo_preferido" class="ds-input h-24" placeholder="Musculação, funcional, HIIT, alongamento..."></textarea>
+                        </div>
+                        <div>
+                            <label class="ds-label">2. Onde pretende treinar?</label>
+                            <textarea name="local_treino" class="ds-input h-24" placeholder="Academia ou em casa? Quais equipamentos possui?"></textarea>
+                        </div>
+                        <div>
+                            <label class="ds-label">3. Intensidade e duração preferida</label>
+                            <select name="intensidade_pref" class="ds-input">
+                                <option value="Intensos e curtos">Intensos e curtos</option>
+                                <option value="Longos e moderados">Longos e moderados</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="ds-label">4. Tem interesse em:</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center gap-2 cursor-pointer bg-white/5 p-3 rounded-lg border border-white/10 hover:border-gc-primary transition-colors">
+                                    <input type="checkbox" name="interesses" value="Força"> Força
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer bg-white/5 p-3 rounded-lg border border-white/10 hover:border-gc-primary transition-colors">
+                                    <input type="checkbox" name="interesses" value="Resistência"> Resistência
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer bg-white/5 p-3 rounded-lg border border-white/10 hover:border-gc-primary transition-colors">
+                                    <input type="checkbox" name="interesses" value="Mobilidade"> Mobilidade
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer bg-white/5 p-3 rounded-lg border border-white/10 hover:border-gc-primary transition-colors">
+                                    <input type="checkbox" name="interesses" value="Estética"> Estética
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 7: Comprometimento -->
+                <div class="step-content" data-step="7">
+                    <h2 class="font-display text-4xl text-gc-muted mb-8 uppercase tracking-wider">Comprometimento</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="ds-label">1. Escala de comprometimento (1 a 10)</label>
+                            <input type="range" name="comprometimento_escala" min="1" max="10" value="8" class="w-full accent-gc-primary">
+                            <div class="flex justify-between text-xs opacity-50 mt-2 font-mono">
+                                <span>1 (Baixo)</span>
+                                <span>10 (Máximo)</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="ds-label">2. Dificuldade em manter treinos no passado?</label>
+                            <textarea name="historico_dificuldade" class="ds-input h-24" placeholder="Se sim, por que?"></textarea>
+                        </div>
+                        <div>
+                            <label class="ds-label">3. Algum fator que possa atrapalhar agora?</label>
+                            <textarea name="fatores_atrapalham" class="ds-input h-24" placeholder="Tempo, lesões, motivação, ambiente..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div id="success-screen" class="hidden text-center py-12">
+                    <div class="success-checkmark">
+                        <iconify-icon icon="solar:check-circle-bold-duotone"></iconify-icon>
+                    </div>
+                    <h2 class="font-display text-4xl text-gc-muted mb-4 uppercase">Enviado com Sucesso!</h2>
+                    <p class="text-gc-muted/70 mb-10 max-w-sm mx-auto">Recebemos suas informações e o Gabriel Carneiro entrará em contato em breve para dar início ao seu projeto.</p>
+                    <div class="btn-beam-wrapper group">
+                        <span class="btn-beam-border"></span>
+                        <a href="index.html" class="btn-beam-inner">
+                            Voltar ao Início
+                            <iconify-icon icon="solar:home-2-bold-duotone" class="text-xl"></iconify-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div id="nav-buttons" class="mt-12 flex items-center justify-between">
+                    <button type="button" id="prev-btn" class="btn-secondary invisible">
+                        <iconify-icon icon="solar:arrow-left-linear" class="mr-2 align-middle"></iconify-icon>
+                        Voltar
+                    </button>
+                    
+                    <div class="btn-beam-wrapper group" id="next-btn-wrapper">
+                        <span class="btn-beam-border"></span>
+                        <button type="button" id="next-btn" class="btn-beam-inner">
+                            Continuar
+                            <iconify-icon icon="solar:arrow-right-linear" class="text-xl group-hover:translate-x-1 transition-transform"></iconify-icon>
+                        </button>
+                    </div>
+
+                    <div class="btn-beam-wrapper group hidden" id="submit-btn-wrapper">
+                        <span class="btn-beam-border"></span>
+                        <button type="submit" id="submit-btn" class="btn-beam-inner">
+                            Finalizar Cadastro
+                            <iconify-icon icon="solar:verification-check-bold-duotone" class="text-xl"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </main>
+
+    <footer class="mt-12 text-center">
+        <p class="text-xs font-light text-gc-muted/40">© 2026 Gabriel Carneiro | Todos os Dados são Confidenciais</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('anamnese-form');
+        const steps = document.querySelectorAll('.step-content');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const progressFill = document.getElementById('progress-fill');
+        const stepIndicator = document.getElementById('step-indicator');
+        const stepTitle = document.getElementById('step-title');
+        const nextBtnWrapper = document.getElementById('next-btn-wrapper');
+        const submitBtnWrapper = document.getElementById('submit-btn-wrapper');
+        const navButtons = document.getElementById('nav-buttons');
+        const successScreen = document.getElementById('success-screen');
+
+        let currentStep = 1;
+        const totalSteps = 7;
+
+        const titles = [
+            "Dados Pessoais",
+            "Histórico de Saúde",
+            "Hábitos de Vida",
+            "Avaliação Física",
+            "Objetivos do Treino",
+            "Estilo de Treino",
+            "Comprometimento"
+        ];
+
+        function updateStep() {
+            // Update visibility
+            steps.forEach(step => {
+                step.classList.remove('active');
+                if (parseInt(step.dataset.step) === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Update progress
+            const progress = (currentStep / totalSteps) * 100;
+            progressFill.style.width = `${progress}%`;
+
+            // Update text
+            stepIndicator.innerText = `Passo ${currentStep} de ${totalSteps}`;
+            stepTitle.innerText = titles[currentStep - 1];
+
+            // Update buttons
+            prevBtn.classList.toggle('invisible', currentStep === 1);
+            
+            if (currentStep === totalSteps) {
+                nextBtnWrapper.classList.add('hidden');
+                submitBtnWrapper.classList.remove('hidden');
+            } else {
+                nextBtnWrapper.classList.remove('hidden');
+                submitBtnWrapper.classList.add('hidden');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        nextBtn.addEventListener('click', () => {
+            // Basic validation for the current step
+            const currentStepEl = document.querySelector(`.step-content[data-step="${currentStep}"]`);
+            const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
+            let valid = true;
+
+            inputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('border-red-500');
+                    valid = false;
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+
+            if (valid && currentStep < totalSteps) {
+                currentStep++;
+                updateStep();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStep();
+            }
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const dataToDiscord = [];
+            
+            for (let [key, value] of formData.entries()) {
+                if (key === 'interesses') {
+                    const interesses = formData.getAll('interesses');
+                    dataToDiscord.push(`**${key}**: ${interesses.join(', ')}`);
+                } else {
+                    dataToDiscord.push(`**${key}**: ${value}`);
+                }
+            }
+
+            const uniqueLines = [...new Set(dataToDiscord)]; // Avoid duplicating checkboxes
+
+            const message = {
+                content: "Novo formulário preenchido!\n\n" + uniqueLines.join('\n')
+            };
+
+            fetch('https://discord.com/api/webhooks/1488889073149022259/wc4On8FmAb3NcBCQdPvf9uhf32-MauLUPNv0rxJ5BojiUd0grjY85H_mgakfKjjm2TNJ', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(message)
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Dados enviados ao Discord com sucesso');
+                } else {
+                    console.error('Erro ao enviar para o Discord');
+                }
+            }).catch(error => {
+                console.error('Erro na requisição para o Discord:', error);
+            });
+
+            // Show success screen
+            steps.forEach(s => s.classList.remove('active'));
+            navButtons.classList.add('hidden');
+            progressFill.parentElement.parentElement.classList.add('hidden');
+            successScreen.classList.remove('hidden');
+        });
+
+        feather.replace();
+    </script>
+</body>
+
+</html>
